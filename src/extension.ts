@@ -3,12 +3,47 @@
  * @version: 
  * @Author: @imdanteking
  * @Date: 2023-03-31 00:56:56
- * @LastEditTime: 2023-04-03 16:41:12
+ * @LastEditTime: 2023-04-03 21:45:36
  */
 import * as vscode from 'vscode';
 import axios from 'axios';
 import * as fs from 'fs';
+import * as sidebar from './configuration';
+import { AssertionError } from 'assert';
+
+
 export function activate(context: vscode.ExtensionContext) {
+	// define the apikey
+	let API_KEY:string = "";
+	// define the maximum number of tokens ChatGPT can return
+	let MAX_TOKEN = 1000;
+	// register sidebar
+	const genutSidebar = new sidebar.EntryList();
+	// register tree
+	vscode.window.registerTreeDataProvider("genut-config", genutSidebar);
+	// register the tree children's click event
+	// set APIKEY event
+	vscode.commands.registerCommand("Set_APIKEY.openChild", async () => {
+		API_KEY = await vscode.window.showInputBox({
+			prompt: "Please input openai api key",
+			value: '',
+			placeHolder: "API KEY",
+			validateInput: (value)=> value ? null : "API KEY can not be empty"
+		}) as string;
+		vscode.window.showInformationMessage("APIKEY: " + API_KEY);
+	});
+	// set MAX_TOKEN event
+	vscode.commands.registerCommand("Set_MAX_TOKEN.openChild", async () => {
+		let token = await vscode.window.showInputBox({
+			prompt: "Please input the max token",
+			value: '',
+			placeHolder: "max token",
+			validateInput: (value)=> value ? null : "the number can not be set empty"
+		}) as string;
+		MAX_TOKEN = parseInt(token);
+		vscode.window.showInformationMessage("MAX TOKEN: " + MAX_TOKEN);
+	});
+	// register generator of unittest
 	let disposable = vscode.commands.registerCommand('genut.genut', async () => {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Generating Unittests...');
@@ -47,8 +82,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Send request to ChatGPT
 		const chaturl = "https://api.openai.com/v1/chat/completions";
-		const API_KEY = "";
-		const MAX_TOKEN = 1000;
 		let context = "Please generate unittest for the code below:\n";
 		let code = ""; // The code ChatGPT returns.
 		context += selectedText;

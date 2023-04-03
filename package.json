@@ -9,13 +9,27 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onView: genut-view"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "genut.genut",
         "title": "Generate Unittest"
+      }
+    ],
+    "configuration":[
+      {
+        "title": "Genut",
+        "properties": {
+          "genut.apikey": {
+            "type": "string",
+            "default": "",
+            "description": "apikey that openai provides, you can create it in platform.openai.com"
+          }
+        }
       }
     ],
     "menus": {
@@ -25,6 +39,19 @@
           "group": "navigation"
         }
       ]
+    },
+    "viewsContainers": {
+      "activitybar": [{
+        "id": "genut-explorer",
+        "title": "genut explorer",
+        "icon": "./T.svg"
+      }]
+    },
+    "views": {
+        "genut-explorer": [{
+            "id": "genut-config",
+            "name": "genut config"
+          }]
     }
   },
   "scripts": {
