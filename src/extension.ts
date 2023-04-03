@@ -3,7 +3,7 @@
  * @version: 
  * @Author: @imdanteking
  * @Date: 2023-03-31 00:56:56
- * @LastEditTime: 2023-04-02 14:21:33
+ * @LastEditTime: 2023-04-03 16:41:12
  */
 import * as vscode from 'vscode';
 import axios from 'axios';
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const curDir = curFileName?.slice(0, curFileName.lastIndexOf("\/"));
 			console.log("curDir: ", curDir);
 			const newFileName = curDir + "\/" + "test_" + curFileName?.slice(curFileName.lastIndexOf("\/") + 1);
-			fs.writeFile(curDir+"/"+newFileName, code, (err)=>{
+			fs.writeFile(newFileName, code, (err)=>{
 				if(err) {
 					console.error(err);
 					return;
